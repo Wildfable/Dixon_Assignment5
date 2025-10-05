@@ -25,9 +25,9 @@ Main = (function() {
         map: map,
         camera: {
             position: {
-                x: -105.503,
+                x: -175.700680,
                 y: 44.270,
-                z: 20000000,
+                z: 17500000,
                 spatialReference: {
                     wkid: 4326
     
@@ -43,13 +43,18 @@ Main = (function() {
             }
         },
         // enable shadows to be cast from the features
+
         environment: {
-            lighting: {
-                directShadowsEnabled: false
+             background: {
+             type: "sky" 
+                },
+            starsEnabled: true,
+             lighting: {
+            directShadowsEnabled: false
             }
-        }
-    });
-                
+                }
+});
+             
     const initMap = function(){
                           
         const graphicsLayer = new GraphicsLayer();               
@@ -83,9 +88,10 @@ Main = (function() {
                 geometry: point,                            
                 symbol: markerSymbol,                            
                 popupTemplate: {                                
-                    title: key + ": " + value.city + ", " + value.state                            
-                }                  
-            });
+                    title: key,
+                      content: 'Location:' + " " + value.city + ", " + value.state
+                                }});                           
+            
                           
             graphicsLayer.add(pointGraphic);
                     
