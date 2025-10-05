@@ -66,13 +66,14 @@ Main = (function() {
             };
                                 
             const markerSymbol = {                            
-                type: "simple-marker",                             
-                color: [0, 0, 255],                            
+                type: "simple-marker",     
+                style: "diamond",                        
+                color: [222, 49, 99],                            
                 outline: {
                               
                     // autocasts as new SimpleLineSymbol()                              
-                    color: [255, 255, 255],                             
-                    width: 2
+                    color: [119, 7, 55],                             
+                    width: 1
                             
                 }
                           
