@@ -3,5 +3,5 @@
 ### Author: Emma Dixon
 
 A 3D map showing points of interest to Emma Dixon.
-<https://wildfable.github.io/Assignment5/>
+<https://wildfable.github.io/Dixon_Assignment5/>
 
