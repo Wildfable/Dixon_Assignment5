@@ -94,13 +94,36 @@ Main = (function() {
             
                           
             graphicsLayer.add(pointGraphic);
-                    
+            
+
+
                     
         }
                                     
     }
                 
     initMap()
+
+    view.on("click", function(event) {
+  // Search for graphics at the clicked location. View events can be used
+  // as screen locations as they expose an x,y coordinate that conforms
+  // to the ScreenPoint definition.
+  view.hitTest(event).then(function(response) {
+    let result = response.results[0];
+
+    if (result?.type === "graphic") {
+      let lon = result.mapPoint.longitude;
+      let lat = result.mapPoint.latitude;
+
+      console.log("Hit graphic at (" + lon + ", " + lat + ")", result.graphic);
+      view.goTo({target:result.graphic.geometry,
+                zoom:7
+    });
+    } else {
+      console.log("Did not hit any graphic");
+    }
+  });
+});
                 
     return {};
 
