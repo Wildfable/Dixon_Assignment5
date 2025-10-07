@@ -102,6 +102,46 @@ Main = (function() {
 
 
                     
+        };
+
+for (const [key, value] of Object.entries(cities)){                       
+            console.log(key, value)
+                        
+            const point = {                        
+                type: "point",                             
+                x: value.coord[0],                        
+                y: value.coord[1],                            
+                z: 10000                          
+            };
+                                
+            const markerSymbol = {                            
+                type: "simple-marker",     
+                style: "square",                        
+                color: [152, 251, 152],                            
+                outline: {
+                              
+                    // autocasts as new SimpleLineSymbol()                              
+                    color: [71, 135, 120],                             
+                    width: 1
+                            
+                }
+                          
+            };
+                                                
+            const pointGraphic = new Graphic({                            
+                geometry: point,                            
+                symbol: markerSymbol,                            
+                popupTemplate: {                                
+                    title: key,
+                      content: 'Location:' + " " + value.city + ", " + value.state
+                                }});                           
+            
+                          
+            graphicsLayer.add(pointGraphic);
+            
+
+
+                    
         }
                                     
     }
