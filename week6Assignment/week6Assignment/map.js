@@ -7,7 +7,8 @@ import Graphic from "https://js.arcgis.com/4.33/@arcgis/core/Graphic.js";
 import GraphicsLayer from "https://js.arcgis.com/4.33/@arcgis/core/layers/GraphicsLayer.js";
 import ElevationLayer from "https://js.arcgis.com/4.33/@arcgis/core/layers/ElevationLayer.js";
 import SceneView from "https://js.arcgis.com/4.33/@arcgis/core/views/SceneView.js";
-import FeatureLayer from "https://js.arcgis.com/4.33/@arcgis/core/layers/FeatureLayer.js";
+
+
 
 Main = (function() {
     const layer = new ElevationLayer({
