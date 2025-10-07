@@ -167,7 +167,29 @@ for (const [key, value] of Object.entries(cities)){
   });
 });
 
-  
+view.when(() => {
+  const searchInput = document.getElementById("searchInput");
+  const searchBtn = document.getElementById("searchBtn");
+
+  searchBtn.addEventListener("click", () => {
+    const searchTerm = searchInput.value.trim();
+
+
+    const matchedKey = Object.keys(cities).find(city => city.toLowerCase() === searchTerm.toLowerCase());
+
+    if (matchedKey) {
+      const city = cities[matchedKey];
+      view.goTo({
+        center: [city.coord[0], city.coord[1]],
+        zoom: 10
+      }).catch(err => {
+        console.error("GoTo failed: ", err);
+      });
+    } else {
+      alert("City not found in dataset.");
+    }
+  });
+});
                 
     return {};
 
