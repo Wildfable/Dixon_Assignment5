@@ -7,6 +7,7 @@ import Graphic from "https://js.arcgis.com/4.33/@arcgis/core/Graphic.js";
 import GraphicsLayer from "https://js.arcgis.com/4.33/@arcgis/core/layers/GraphicsLayer.js";
 import ElevationLayer from "https://js.arcgis.com/4.33/@arcgis/core/layers/ElevationLayer.js";
 import SceneView from "https://js.arcgis.com/4.33/@arcgis/core/views/SceneView.js";
+import FeatureLayer from "https://js.arcgis.com/4.33/@arcgis/core/layers/FeatureLayer.js";
 
 Main = (function() {
     const layer = new ElevationLayer({
@@ -57,7 +58,10 @@ Main = (function() {
              
     const initMap = function(){
                           
-        const graphicsLayer = new GraphicsLayer();               
+        const graphicsLayer = new GraphicsLayer();
+        graphicsLayer.featureReduction = {
+  type: "cluster"
+};          
         map.add(graphicsLayer);
 
         for (const [key, value] of Object.entries(myStuff)){                       
@@ -105,9 +109,7 @@ Main = (function() {
     initMap()
 
     view.on("click", function(event) {
-  // Search for graphics at the clicked location. View events can be used
-  // as screen locations as they expose an x,y coordinate that conforms
-  // to the ScreenPoint definition.
+  
   view.hitTest(event).then(function(response) {
     let result = response.results[0];
 
