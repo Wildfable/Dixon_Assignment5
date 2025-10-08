@@ -7,7 +7,7 @@ import Graphic from "https://js.arcgis.com/4.33/@arcgis/core/Graphic.js";
 import GraphicsLayer from "https://js.arcgis.com/4.33/@arcgis/core/layers/GraphicsLayer.js";
 import ElevationLayer from "https://js.arcgis.com/4.33/@arcgis/core/layers/ElevationLayer.js";
 import SceneView from "https://js.arcgis.com/4.33/@arcgis/core/views/SceneView.js";
-
+import FeatureLayer from "https://js.arcgis.com/4.33/@arcgis/core/layers/FeatureLayer.js";
 
 Main = (function() {
     const layer = new ElevationLayer({
@@ -43,7 +43,7 @@ Main = (function() {
                 breakpoint: false
             }
         },
-        // enable shadows to be cast from the features
+       
 
         environment: {
              background: {
@@ -56,95 +56,137 @@ Main = (function() {
                 }
 });
              
-    const initMap = function(){
-                          
-        const graphicsLayer = new GraphicsLayer();
-        graphicsLayer.featureReduction = {
-  type: "cluster"
-};          
-        map.add(graphicsLayer);
+const initMap = function() {
+   
+    const graphicsLayer = new GraphicsLayer();
+    map.add(graphicsLayer);
 
-        for (const [key, value] of Object.entries(myStuff)){                       
-            console.log(key, value)
-                        
-            const point = {                        
-                type: "point",                             
-                x: value.coord[0],                        
-                y: value.coord[1],                            
-                z: 10000                          
-            };
-                                
-            const markerSymbol = {                            
-                type: "simple-marker",     
-                style: "diamond",                        
-                color: [222, 49, 99],                            
-                outline: {
-                              
-                    // autocasts as new SimpleLineSymbol()                              
-                    color: [119, 7, 55],                             
-                    width: 1
-                            
-                }
-                          
-            };
-                                                
-            const pointGraphic = new Graphic({                            
-                geometry: point,                            
-                symbol: markerSymbol,                            
-                popupTemplate: {                                
-                    title: key,
-                      content: 'Location:' + " " + value.city + ", " + value.state
-                                }});                           
-            
-                          
-            graphicsLayer.add(pointGraphic);
-            
-
-
-                    
+   
+    for (const [key, value] of Object.entries(myStuff)) {
+        const point = {                        
+            type: "point",                             
+            x: value.coord[0],                        
+            y: value.coord[1],                            
+            z: 10000                          
         };
+        const markerSymbol = {                            
+            type: "simple-marker",     
+            style: "diamond",                        
+            color: [222, 49, 99],                            
+            outline: {
+                color: [119, 7, 55],                             
+                width: 1
+            }
+        };
+        const pointGraphic = new Graphic({                            
+            geometry: point,                            
+            symbol: markerSymbol,                            
+            popupTemplate: {                                
+                title: key,
+                content: 'Location: ' + value.city + ", " + value.state
+            }
+        });
+        graphicsLayer.add(pointGraphic);
+    }
 
-for (const [key, value] of Object.entries(cities)){                       
-            console.log(key, value)
-                        
-            const point = {                        
-                type: "point",                             
-                x: value.coord[0],                        
-                y: value.coord[1],                            
-                z: 10000                          
-            };
-                                
-            const markerSymbol = {                            
-                type: "simple-marker",     
-                style: "square",                        
-                color: [152, 251, 152],                            
-                outline: {
-                              
-                    // autocasts as new SimpleLineSymbol()                              
-                    color: [71, 135, 120],                             
-                    width: 1
-                            
+  
+    const cityGraphics = [];
+    let objectId = 1; 
+
+    for (const [key, value] of Object.entries(cities)) {
+        cityGraphics.push(new Graphic({
+            geometry: {
+                type: "point",
+                x: value.coord[0],
+                y: value.coord[1],
+                z: 10000
+            },
+            attributes: {
+                objectId: objectId++,  
+                title: key,
+                city: value.city,
+                state: value.state
+            }
+        }));
+    }
+
+   
+const cityFeatureLayer = new FeatureLayer({
+    source: cityGraphics,
+    objectIdField: "objectId",
+    fields: [
+        { name: "objectId", type: "oid" },
+        { name: "title", type: "string" },
+        { name: "city", type: "string" },
+        { name: "state", type: "string" }
+    ],
+    geometryType: "point", 
+    spatialReference: { wkid: 4326 }, 
+    
+    featureReduction: {
+        type: "cluster",
+        clusterRadius: 500, 
+        clusterMinSize: 24,
+        clusterMaxSize: 60,
+       
+        clusterSymbol: {
+            type: "simple-marker",
+            style: "circle",
+            color: [255, 0, 0, 0.7],
+            size: 30,
+            outline: {
+                color: [255, 255, 255],
+                width: 2
+            }
+        },
+        labelingInfo: [{
+            labelExpressionInfo: {
+                expression: "$feature.cluster_count"
+            },
+            symbol: {
+                type: "text",
+                color: "#ffffff",
+                font: {
+                    size: "12px",
+                    weight: "bold"
                 }
-                          
-            };
-                                                
-            const pointGraphic = new Graphic({                            
-                geometry: point,                            
-                symbol: markerSymbol,                            
-                popupTemplate: {                                
-                    title: key,
-                      content: 'Location:' + " " + value.city + ", " + value.state
-                                }});                           
-            
-                          
-            graphicsLayer.add(pointGraphic);
-            
+            }
+        }],
+        popupTemplate: {
+            title: "Cluster of {cluster_count} cities",
+            content: "This cluster represents <b>{cluster_count}</b> cities."
+        }
+    },
+    
+    
+    renderer: {
+        type: "simple",
+        symbol: {
+            type: "simple-marker",
+            style: "circle",
+            color: [152, 251, 152],
+            size: 8,
+            outline: {
+                color: [71, 135, 120],
+                width: 1
+            }
+        }
+    },
+    
+    popupTemplate: {
+        title: "{title}",
+        content: "City: {city}, State: {state}"
+    }
+});
+
+    map.add(cityFeatureLayer);
+};
 
 
                     
-        }
+    
                                     
-    }
+
                 
     initMap()
 
