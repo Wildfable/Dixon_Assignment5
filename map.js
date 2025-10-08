@@ -9,6 +9,7 @@ import ElevationLayer from "https://js.arcgis.com/4.33/@arcgis/core/layers/Eleva
 import SceneView from "https://js.arcgis.com/4.33/@arcgis/core/views/SceneView.js";
 
 
+
 Main = (function() {
     const layer = new ElevationLayer({
         url: "http://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer"
@@ -195,7 +196,5 @@ view.when(() => {
 
             
 })();
-
-
 
     
