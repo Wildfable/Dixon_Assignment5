@@ -99,7 +99,7 @@ const initMap = function() {
                 type: "point",
                 x: value.coord[0],
                 y: value.coord[1],
-                z: 10000
+               
             },
             attributes: {
                 objectId: objectId++,  
@@ -122,6 +122,10 @@ const cityFeatureLayer = new FeatureLayer({
     ],
     geometryType: "point", 
     spatialReference: { wkid: 4326 }, 
+
+       elevationInfo: {
+        mode: "on-the-ground"  // This makes the layer render flat in 3D scene
+    },
     
     featureReduction: {
         type: "cluster",
@@ -139,23 +143,7 @@ const cityFeatureLayer = new FeatureLayer({
                 width: 2
             }
         },
-        labelingInfo: [{
-            labelExpressionInfo: {
-                expression: "$feature.cluster_count"
-            },
-            symbol: {
-                type: "text",
-                color: "#ffffff",
-                font: {
-                    size: "12px",
-                    weight: "bold"
-                }
-            }
-        }],
-        popupTemplate: {
-            title: "Cluster of {cluster_count} cities",
-            content: "This cluster represents <b>{cluster_count}</b> cities."
-        }
+       
     },
     
     
@@ -180,6 +168,8 @@ const cityFeatureLayer = new FeatureLayer({
 });
 
     map.add(cityFeatureLayer);
+
+    
 };
 
 
